@@ -14,6 +14,6 @@ router.post('/', createWorkshop);
 router.delete('/:id', deleteWorkshop);
 router.delete('/service-delete/:id', deleteService);
 router.post('/service-add/:id', addService);
-router.get('/', getAllWorkshop);
+router.get('/workshops', getAllWorkshop);
 
 module.exports = router;

@@ -2,11 +2,12 @@ const { Workshop } = require('../models/workshop');
 
 const createWorkshop = async (req, res, next) => {
   try {
-    const { name, description, services } = req.body;
+    const { name, description, services, photo } = req.body;
+
     const workshop = await Workshop.findOne({ name });
     if (!workshop) {
-      await Workshop.create({ name, description, services });
-      res.status(201).json({ name, description, services });
+      await Workshop.create({ name, description, services, photo });
+      res.status(201).json({ name, description, services, photo });
     }
     return res
       .status(400)

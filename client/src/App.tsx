@@ -6,13 +6,21 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Home } from "./pages/Home";
 import { ErrorPage } from "./errorPage/errorPage";
 import { CreateWorkshop } from "./components/Main/CreateWorkshop/CreateWorkshop";
+import { Workshops } from "./components/Main/Workshops/Workshops";
+import { getWorkshops } from "./utils/getData";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
     errorElement: <ErrorPage />,
+
     children: [
+      {
+        path: "/workshops",
+        element: <Workshops />,
+        loader: getWorkshops,
+      },
       {
         path: "/createworkshop",
         element: <CreateWorkshop />,

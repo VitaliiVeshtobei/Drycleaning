@@ -31,9 +31,9 @@ export function TopBar({ toggleSideBar, sideBarIsOpen }: Props) {
       <AppBarStyled
         sidebarisopen={`${sideBarIsOpen}`}
         position="fixed"
-        sx={{
-          backgroundColor: theme.palette.primary.dark,
-        }}
+        // sx={{
+        //   backgroundColor: theme.palette.primary.dark,
+        // }}
       >
         <Toolbar>
           <IconButton

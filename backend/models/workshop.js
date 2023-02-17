@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const workshopSchema = new Schema(
   {
+    photo: { type: String },
     name: {
       type: String,
       required: [true, 'Name is required'],

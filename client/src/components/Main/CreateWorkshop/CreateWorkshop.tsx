@@ -1,5 +1,6 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, CardMedia, TextField, Typography } from "@mui/material";
+import { useRef, useState } from "react";
+
 import axios from "axios";
 import { api } from "../../../utils/axiosDefault";
 
@@ -8,12 +9,10 @@ api();
 interface IWorkshop {
   name: string;
   description: string;
-  // services: never[];
 }
 interface IService {
   serviceName?: string;
   servicePrice?: string;
-  // services: never[];
 }
 const initialService = {
   serviceName: "",
@@ -29,10 +28,12 @@ const initialForm = {
 };
 
 export const CreateWorkshop = () => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [fileImage, setFileImage] = useState<string | Blob>("");
   const [workshopData, setWorkshopData] = useState<IWorkshop>(initialForm);
   const [service, setService] = useState<IService>(initialService);
-
   const [services, setServices] = useState<Services>([]);
+  // const [photoUrl, setPhotoUrl] = useState("");
 
   const handlerWorkshopData: React.ChangeEventHandler<HTMLInputElement> = (
     e
@@ -44,6 +45,7 @@ export const CreateWorkshop = () => {
       return { ...prev, [name]: value };
     });
   };
+
   const handlerService: React.ChangeEventHandler<HTMLInputElement> = (
     e
   ): void => {
@@ -61,16 +63,86 @@ export const CreateWorkshop = () => {
     });
   };
 
+  const uploadImage: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const input = event.target;
+
+    if (!input.files?.length) {
+      return;
+    }
+
+    const file = input.files[0];
+    setFileImage(file);
+    let img: string = URL.createObjectURL(file);
+    setSelectedImage(img);
+  };
+
   const sendData = async () => {
-    const data = { ...workshopData, services };
-    const res = await axios.post("/workshop", data);
-    console.log(res);
+    const photo = await uploadImageToServer();
+
+    const data = { ...workshopData, services, photo };
+
+    axios.post("/workshop", data);
+  };
+
+  const uploadImageToServer = async () => {
+    if (!selectedImage) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", fileImage);
+    formData.append("upload_preset", "mycx4hvf");
+    let data = "";
+    // try {
+    //   const res = await axios.post(
+    //     "https://api.cloudinary.com/v1_1/dbadzgenl/image/upload",
+    //     formData
+    //   );
+    //   console.log(res);
+    //   setPhotoUrl(res.data["secure_url"]);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dbadzgenl/image/upload", formData)
+      .then((resp) => {
+        data = resp.data["secure_url"];
+      });
+    return data;
   };
 
   return (
     <Box>
       <StyledTypography variant="h3">Create Workshop</StyledTypography>
+      <div>
+        {selectedImage && (
+          <Box>
+            <CardMedia
+              image={selectedImage}
+              // src={URL.createObjectURL(selectedImage)}
+              sx={{ height: 250 }}
+            >
+              {/* <img
+                alt="workshop"
+                width={"250px"}
+                src={URL.createObjectURL(selectedImage)}
+              /> */}
+            </CardMedia>
 
+            <button onClick={() => setSelectedImage(null)}>Remove</button>
+          </Box>
+        )}
+
+        <Button variant="contained" component="label">
+          Upload Photo
+          <input
+            hidden
+            accept="image/*"
+            multiple
+            type="file"
+            onChange={uploadImage}
+          />
+        </Button>
+      </div>
       <StyledFormControl>
         <TextField
           value={workshopData.name}

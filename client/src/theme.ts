@@ -138,9 +138,9 @@ export const themeSettings = (mode: PaletteMode | undefined) => {
           }
         : {
             primary: {
-              main: colors.lightBrown[600],
+              main: colors.darkBrown[600],
             },
-            secondary: { main: colors.lightGreen[900] },
+            secondary: { main: colors.middleGreen[100] },
 
             background: {
               default: colors.lightGreen[700],
